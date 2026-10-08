@@ -20,14 +20,14 @@ new #[Title('todoを編集')] class extends Component {
     #[Validate('required|date')]
     public string $start_at = '';
 
-    #[Validate('required|date|after:start_at')]
+    #[Validate('required|date|after:starts_at')]
     public string $due_at = '';
 
     public function mount(Todo $todo): void
     {
-     // 自分が作ったイベントでなければ 403
+        // 自分が作ったイベントでなければ 403
         abort_unless($todo->isOwnedBy(auth()->user()), 403);
-
+    
         $this->todo = $todo;
         $this->title = $todo->title;
         $this->memo = $todo->memo;
@@ -38,7 +38,7 @@ new #[Title('todoを編集')] class extends Component {
 
     public function save(): void
     {
-        abort_unless($this->todo->isOwnedBy(auth()->user()), 403);
+    abort_unless($this->todo->isOwnedBy(auth()->user()), 403);
 
         $this->todo->update($this->validate());
 
@@ -49,6 +49,8 @@ new #[Title('todoを編集')] class extends Component {
 
     public function delete(): void
     {
+    abort_unless($this->todo->isOwnedBy(auth()->user()), 403);
+
         $this->todo->delete();
 
         session()->flash('status', 'todoを削除しました。');
@@ -62,13 +64,13 @@ new #[Title('todoを編集')] class extends Component {
     <flux:heading size="xl">todoを編集</flux:heading>
 
     <form wire:submit="save" class="space-y-6">
-        <flux:input wire:model="title" label="タイトル" />
-        <flux:textarea wire:model="memo" label="説明" rows="6" />
-        <flux:input wire:model="due" label="会場" />
+        <flux:input wire:model="title" label="やること" />
+        <flux:textarea wire:model="memo" label="メモ" rows="6" />
+        <flux:input wire:model="category" label="カテゴリ" />
 
         <div class="grid gap-6 sm:grid-cols-2">
-            <flux:input wire:model="start_at" label="開始日時" type="datetime-local" />
-            <flux:input wire:model="due_at" label="終了日時" type="datetime-local" />
+            <flux:input wire:model="start_at" label="着手日時" type="datetime-local" />
+            <flux:input wire:model="due_at" label="期限" type="datetime-local" />
         </div>
 
         <div class="flex justify-between">
@@ -80,3 +82,5 @@ new #[Title('todoを編集')] class extends Component {
         </div>
     </form>
 </div>
+
+
