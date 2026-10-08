@@ -48,8 +48,9 @@ new #[Title('todo一覧')] class extends Component {
                 @foreach ($this->todos as $todo)
                     <flux:table.row wire:key="todo-{{ $todo->id }}">
                         <flux:table.cell variant="strong">{{ $todo->title }}</flux:table.cell>
+                        <flux:table.cell>{{ Str::limit($todo->description, 20) }}</flux:table.cell>
                         <flux:table.cell>{{ $todo->start_at->isoFormat('M月D日(ddd) HH:mm') }} 〜 {{ $todo->due_at->isoFormat('HH:mm') }}</flux:table.cell>
-                        <flux:table.cell>{{ $todo->venue }}</flux:table.cell>
+                        <flux:table.cell>{{ $todo->category }}</flux:table.cell>
                         <flux:table.cell>{{ $todo->user->name }}</flux:table.cell>
                         <flux:table.cell>
                             @if ($todo->isOwnedBy(auth()->user()))
